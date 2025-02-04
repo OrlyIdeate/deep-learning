@@ -16,8 +16,8 @@ class CNN(nn.Module):
         self.conv3 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
-        self.fc1 = nn.Linear(64, 128)
-        self.fc2 = nn.Linear(128, 10)
+        self.fc1 = nn.Linear(64, 32)
+        self.fc2 = nn.Linear(32, 10)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -38,7 +38,7 @@ print(f"device: {device}")
 
 # モデルのロード
 model = CNN()
-model.load_state_dict(torch.load('streamlit-mnist-app/src/model/trained_mnist_cnn_model.pth', map_location=torch.device(device)))
+model.load_state_dict(torch.load('/mount/src/streamlit-mnist-app/src/model/trained_mnist_cnn_model.pth', map_location=torch.device(device)))
 model.eval()
 
 # 画像の前処理
@@ -68,8 +68,8 @@ canvas_result = st_canvas(
     stroke_color="white",  # ペンの色を白にする
     stroke_width=20,  # 太めに描画（モデルが認識しやすい）
     background_color="black",
-    height=200,
-    width=200,
+    height=280,
+    width=280,
     drawing_mode="freedraw",
     key="canvas",
 )
@@ -77,13 +77,12 @@ canvas_result = st_canvas(
 # 画像のアップロードまたは描画
 if canvas_result.image_data is not None:
     image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGBA').convert("L")
-    st.image(image, caption="描画した画像", use_container_width=True)
 
     # 画像の前処理
     processed_image = preprocess_image(image)
 
     # 前処理後の画像を表示
-    st.image(processed_image.squeeze().numpy(), caption='前処理後の画像', use_container_width=True, clamp=True)
+    # st.image(processed_image.squeeze().numpy(), caption='前処理後の画像', use_container_width=True, clamp=True)
 
     # 予測
     prediction = predict(processed_image)
