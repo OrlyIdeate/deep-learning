@@ -1,3 +1,5 @@
 /.venv
 /.vscode
 /workspace.code-workspace
+/models/ppo_carracing_[0-9]*_steps.zip
+/models/ppo_carracing_[0-9]*
